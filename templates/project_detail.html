@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ project.name if project else 'Project Details' }} - LegalPro Workspace{% endblock %}
+
+{% block content %}
+{# Header is inherited from base.html #}
+{# HTMX script is already included in base.html #}
+{# Main content area is handled by app-content block in base.html #}
+{# Remove main-content and container classes #}
+        {% if project %}
+            {# Display Project Title and Description #}
+            <div style="margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);">
+                <h1 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">Project: {{ project.name }}</h1>
+                {% if project.description %}
+                    <p style="color: var(--text-secondary); font-size: 1rem;">{{ project.description }}</p>
+                {% endif %}
+                 <small style="color: var(--text-secondary); font-size: 0.85rem;">Created: {{ project.created_at[:10] }}</small>
+            </div>
+
+            {# Section to display items - Reuse the partial template logic #}
+            <h2 style="font-size: 1.5rem; font-weight: 500; margin-bottom: 1.5rem;">Saved Items</h2>
+            <div id="project-item-list-container">
+                {% if grouped_items %}
+                    {% for query, items_in_group in grouped_items.items() %}
+                        <div class="query-group" style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1.1rem; font-weight: 500; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+                                Query: <span style="font-style: italic; color: var(--text-secondary);">"{{ query }}"</span>
+                            </h3>
+                            {# Now include the partial, passing only the items for this specific group #}
+                            {# The 'items_in_group' variable should be available in this scope #}
+                            {% include 'partials/project_item_list.html' %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                     <p class="placeholder-text" style="padding: 1rem 0; font-size: 0.9em;">This project doesn't have any items yet.</p>
+                {% endif %}
+            </div>
+
+        {% else %}
+            {# Fallback if project data wasn't passed correctly (should be handled by endpoint) #}
+            <h1 style="color: var(--error-text);">Project Not Found</h1>
+            <p>The requested project could not be loaded.</p>
+        {% endif %}
+
+         <div style="margin-top: 2rem;">
+             <a href="/workspace/" class="button button-secondary">&larr; Back to Workspace</a>
+         </div>
+{# Footer is not typically part of the base app layout #}
+
+<!-- Include SortableJS library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
+<!-- Include our custom script for project detail page interactions -->
+<script src="/static/js/project_detail.js"></script>
+116|
+117| {% endblock %}

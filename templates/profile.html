@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile - SAFLII Discover{% endblock %}
+
+{% block head %}
+{{ super() }} {# Include parent block content #}
+<style>
+    .profile-form {
+        max-width: 500px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background-color: var(--background-alt);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .profile-form h2 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        text-align: center;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--text-color-secondary);
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"] { /* Added email for consistency if needed later */
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        box-sizing: border-box; /* Ensure padding doesn't increase size */
+    }
+    .form-group input:disabled {
+        background-color: var(--background-alt);
+        cursor: not-allowed;
+    }
+    .profile-form .button {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+    }
+    /* Message styling (similar to login/signup) */
+    .message {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 4px;
+        text-align: center;
+        font-weight: 500;
+    }
+    .message.success {
+        background-color: #d1e7dd; /* Light green */
+        color: #0f5132; /* Dark green */
+        border: 1px solid #badbcc;
+    }
+    .message.error {
+        background-color: #f8d7da; /* Light red */
+        color: #842029; /* Dark red */
+        border: 1px solid #f5c2c7;
+    }
+    .message.info {
+        background-color: #cff4fc; /* Light blue */
+        color: #055160; /* Dark blue */
+        border: 1px solid #b6effb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-form">
+    <h2>User Profile</h2>
+
+    {# Display messages from the server (e.g., success/error on update) #}
+    {% if message %}
+        <div class="message {{ message_type }}">{{ message }}</div>
+    {% endif %}
+
+    {# Display user information - not editable #}
+    {# Email (read-only) #}
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" value="{{ user.email }}" disabled>
+    </div>
+
+    {# Name (read-only) #}
+    <div class="form-group">
+        <label for="name">Name</label>
+        {# Display existing name from user_metadata #}
+        <input type="text" id="name" value="{{ user_name }}" disabled>
+    </div>
+    {# Removed the form and update button #}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }} {# Include parent block scripts #}
+{# Add any profile-specific JS here if needed #}
+{% endblock %}

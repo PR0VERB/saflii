@@ -1,0 +1,1 @@
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_saflii_cases_htmlsaflii ON public.saflii_cases (htmlsaflii);

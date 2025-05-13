@@ -1,0 +1,11 @@
+fastapi
+requests
+uvicorn[standard]
+numpy
+scikit_learn
+Jinja2
+starlette
+supabase
+python-dotenv
+itsdangerous
+python-multipart

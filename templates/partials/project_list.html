@@ -1,0 +1,28 @@
+{% if projects %}
+    <div class="project-items-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+        {% for project in projects %}
+            <div class="project-item" style="border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1.5rem; background-color: var(--bg-primary);">
+                <h3 style="font-size: 1.2rem; font-weight: 500; color: var(--accent-primary); margin-bottom: 0.5rem;">{{ project.name }}</h3>
+                {% if project.description %}
+                    <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1rem;">{{ project.description }}</p>
+                {% endif %}
+                <small style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">Created: {{ project.created_at[:10] }}</small> {# Display only date part #}
+
+                <div style="text-align: right; display: flex; justify-content: flex-end; gap: 0.5rem; align-items: center;">
+                     <a
+                        href="/projects/{{ project.id }}" {# Link to the dedicated project page #}
+                        class="button button-secondary button-small"
+                     >
+                        View Project
+                     </a>
+                     {# Placeholder for delete button #}
+                     {# <button class="button button-danger button-small" hx-delete="/project/{{ project.id }}">Delete</button> #}
+                </div>
+
+                 {# Removed div for inline item loading #}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="placeholder-text" style="padding: 2rem 0;">Create an account or log in to create or view your projects.</p>
+{% endif %}

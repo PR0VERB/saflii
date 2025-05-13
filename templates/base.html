@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Use a block for the title so child templates can set it -->
+    <title>{% block title %}SAFLII Discover{% endblock %}</title>
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Link to CSS file -->
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- HTMX Core Script -->
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <!-- Block for additional head elements -->
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="app-wrapper">
+        <header class="app-header">
+            <div class="header-title">
+                <a href="/" style="text-decoration: none;"><h2>SAFLII Discover</h2></a>
+            </div>
+            <div class="header-actions">
+                {# Include user dynamically - requires passing user to base context #}
+                {# Call the global function to get user from session #}
+                {# User object is passed directly in context from the route handler #}
+                {% if user %} {# Use the 'user' variable from context #}
+                    <span class="user-greeting">Welcome, {{ user['user_metadata'].get('name', user.email) }}!</span> {# Use dict access for metadata #}
+                    {# Link to Profile Page #}
+                    <a href="{{ request.url_for('profile') }}" class="button button-secondary button-small" style="margin-right: 8px;">Profile</a> {# Use url_for #}
+                    {# Use HTMX POST for logout to match the endpoint #}
+                    <form hx-post="{{ request.url_for('logout') }}" class="auth-form" hx-target="body" hx-swap="outerHTML" style="display: inline;"> {# Use url_for #}
+                        <button type="submit" class="button">Logout</button> {# Removed secondary and small classes #}
+                    </form>
+                {% else %}
+                    <a href="{{ request.url_for('login') }}" class="button button-secondary button-small">Login</a> {# Use url_for #}
+                    <a href="{{ request.url_for('signup') }}" class="button button-secondary button-small">Create account</a> {# Use url_for #}
+                {% endif %}
+            </div>
+        </header>
+
+        <aside class="app-sidebar">
+            <nav>
+                <ul>
+                    <li>
+                        {# Add 'active' class if the current endpoint is 'search.index' #}
+                        <a href="/" class="sidebar-link {% if request.url.path == '/' %}active{% endif %}" id="search-button"> {# Check path instead of endpoint #}
+                            Search
+                        </a>
+                    </li>
+                     <li>
+                        {# Add 'active' class if the current endpoint starts with 'workspace.' #}
+                        <a href="/workspace/" class="sidebar-link {% if request.url.path.startswith('/workspace') %}active{% endif %}" id="workspace-button">
+                            Workspace Home
+                        </a>
+                    </li>
+                    <!-- Add other static navigation links here if needed -->
+                </ul>
+            </nav>
+            <hr style="margin: 1rem 0; border-color: var(--border-color);">
+            {# Area to load the dynamic project list #}
+            <div id="sidebar-project-list"
+                 hx-get="/workspace/sidebar_projects" {# New endpoint needed #}
+                 hx-trigger="load, projectListChanged from:body" {# Load initially and on custom event #}
+                 hx-swap="innerHTML">
+                <p class="loading-text" style="font-size: 0.9em; padding: 0 12px;">Loading projects...</p> {# Placeholder #}
+            </div>
+        </aside>
+
+        <main class="app-content">
+            <!-- Main content block for child templates -->
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Block for scripts at the end of body -->
+    {% block scripts %}
+    <script>
+        document.body.addEventListener('htmx:afterOnLoad', function(event) {
+            const triggerHeader = event.detail.xhr.getResponseHeader('HX-Trigger');
+            if (triggerHeader) {
+                try {
+                    const triggers = JSON.parse(triggerHeader);
+                    if (triggers.showToast) {
+                        const toastData = triggers.showToast;
+                        showToast(toastData.message, toastData.type);
+                    }
+                    // Handle other triggers like projectListChanged if needed here
+                    // Note: projectListChanged is handled automatically by hx-trigger on the sidebar div
+                } catch (e) {
+                    console.error("Error parsing HX-Trigger header:", e);
+                }
+            }
+        });
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`; // Add type class (e.g., 'success', 'error')
+            toast.innerText = message;
+
+            container.appendChild(toast);
+
+            // Trigger the animation
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10); // Small delay to ensure transition works
+
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                // Remove the element after the transition ends (0.5s based on CSS)
+                setTimeout(() => {
+                    if (toast.parentNode === container) { // Check if still attached
+                         container.removeChild(toast);
+                    }
+                }, 500);
+            }, 5000);
+        }
+    </script>
+    {% endblock %}
+
+    <footer class="app-footer">
+        <p>&copy; 2025 LegalPro. All rights reserved.</p>
+    </footer>
+</body>
+</html>

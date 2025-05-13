@@ -1,0 +1,34 @@
+{# Partial template for the 'Add to Project' form #}
+<form
+    hx-post="/project_items/add"
+    hx-target="#add-item-controls-{{ paragraph_id }}" {# Target the container div #}
+    hx-swap="outerHTML" {# Replace the form within the container #}
+    style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;"
+>
+    <input type="hidden" name="paragraph_id" value="{{ paragraph_id }}">
+    <input type="hidden" name="user_query" value="{{ user_query }}"> {# Add hidden input for query #}
+
+    <select name="project_id" required class="input-field" style="padding: 0.3rem 0.5rem; font-size: 0.9em; border-radius: var(--border-radius); border: 1px solid var(--border-color); width: 33%;">
+        <option value="" disabled selected>Select Project</option>
+        {% for project in projects %}
+            {% set is_existing = project.id in existing_project_ids %}
+            <option value="{{ project.id }}" {% if is_existing %}disabled{% endif %}>
+                {{ project.name }}{% if is_existing %} (already added){% endif %}
+            </option>
+        {% endfor %}
+        {# Option to create a new project could be added here later #}
+    </select>
+
+    <div style="width: 33%; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span style="font-size: 0.9em; color: var(--text-muted);">or</span>
+        <a href="/workspace" class="button button-primary button-small" style="padding: 0.3rem 0.6rem; background-color: turquoise; text-decoration: none; color: white; flex-grow: 1; text-align: center;">Create New Project</a>
+    </div>
+
+{# Add optional comment textarea #}
+<textarea name="comment" placeholder="Add an optional comment..." rows="2" class="input-field" style="width: 33%; margin-top: 0.5rem; padding: 0.3rem 0.5rem; font-size: 0.9em; border-radius: var(--border-radius); border: 1px solid var(--border-color);"></textarea>
+
+<button type="submit" class="button button-primary button-small" style="padding: 0.3rem 0.6rem; margin-top: 0.5rem;">Add</button>
+{# Optionally, add a cancel button that reloads the original 'Add to Project...' button #}
+{# <button type="button" hx-get="/path/to/original/button/{{ paragraph_id }}" hx-target="closest form" hx-swap="outerHTML" class="button button-secondary button-small">Cancel</button> #}
+
+</form>

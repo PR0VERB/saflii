@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}SAFLII Discover{% endblock %}
+
+{% block head %}
+    {# Add any page-specific head elements here if needed #}
+{% endblock %}
+
+{% block content %}
+    <main class="main-content container"> {# Keep container class if needed for styling #}
+        <section class="hero-section">
+            <h1>Unlock Deeper Insights</h1>
+            <p class="subtitle">Go beyond keywords. Find relevant SAFLII case paragraphs based on semantic meaning.</p>
+
+            <form hx-post="/search/"
+                  hx-target="#results-area"
+                  hx-swap="innerHTML swap:503"
+                  hx-indicator="#loading-indicator"
+                  class="main-search-form">
+                <input type="text" id="user_query" name="user_query" required value="{{ last_query or '' }}" placeholder="Describe the concept or issue..." aria-label="Search Query">
+                <button type="submit" class="button button-primary button-large">Discover</button>
+            </form>
+            <p class="powered-by" style="text-align: center; margin-top: 5px; font-size: 0.8em; color: #666;">Powered by LegalPro</p>
+
+            {# Message box for non-logged-in users #}
+            {% if user %} {# User is logged in #}
+            <!-- <div class="message message-info" style="margin-top: 1rem; padding: 0.8rem; text-align: center;"> -->
+                <br />
+                 <a href="{{ url_for('view_workspace') }}" class="button button-primary button-large">Go to Your Workspace</a>
+            <!-- </div> -->
+            {% else %} {# User is not logged in #}
+            <div class="message message-info" style="margin-top: 1rem; padding: 0.8rem; text-align: center;">
+                If you want to save your research progress,&nbsp;
+                <a href="{{ url_for('signup') }}" class="button button-secondary button-small" style="margin-left: 0.5rem;">Create an account</a>
+                &nbsp;or&nbsp;
+                <a href="{{ url_for('login') }}" class="button button-secondary button-small">Log in</a>.
+            </div>
+            {% endif %}
+
+             <div id="loading-indicator" class="htmx-indicator loading-text">
+                Searching for relevant paragraphs...
+            </div>
+        </section>
+
+        <section id="results-area" class="results-section">
+            <!-- Initial content or last results -->
+            <!-- <p class="placeholder-text">Enter your query above to find relevant case law.</p> -->
+        </section>
+
+        <section class="features-section">
+             <h2>Why Semantic Search?</h2>
+             <div class="feature-grid">
+                 <div class="feature-item">
+                     <h3>Understand Context</h3>
+                     <p>Find paragraphs discussing similar legal concepts, even with different wording.</p>
+                 </div>
+                 <div class="feature-item">
+                     <h3>Save Time</h3>
+                     <p>Quickly locate relevant passages without sifting through keyword noise.</p>
+                 </div>
+                 <div class="feature-item">
+                     <h3>Build Stronger Arguments</h3>
+                     <p>Discover nuanced connections and supporting case law you might otherwise miss.</p>
+                 </div>
+             </div>
+        </section>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }} {# Include scripts from base.html if needed #}
+    {# Add any page-specific scripts here #}
+    <script>
+        // Listener for successful swaps (e.g., initial load, successful search/retry)
+        // REMOVED retry logic from here to avoid conflict with responseError handler.
+        // This listener might still be useful for other afterSwap actions if needed in the future.
+        document.body.addEventListener('htmx:afterSwap', function(event) {
+             console.log('htmx:afterSwap triggered for target:', event.detail.target.id);
+             // If the swap target is the results area, remove the booting message if it exists
+             if (event.detail.target.id === 'results-area') {
+                 const bootMessageToRemove = document.getElementById('booting-message');
+                 if (bootMessageToRemove) {
+                     bootMessageToRemove.remove();
+                     console.log('Removed booting message element after swap.');
+                 }
+                 // Ensure standard indicator is visible again after boot message is removed
+                 const loadingIndicator = document.getElementById('loading-indicator');
+                 if (loadingIndicator) {
+                    loadingIndicator.style.display = ''; // Reset to default display
+                    console.log('Reset standard indicator display after swap.');
+                 }
+             }
+        });
+
+        // New listener specifically for response errors
+        document.body.addEventListener('htmx:responseError', function(event) {
+            console.log('htmx:responseError triggered.'); // Log start
+            // Check if the error is from our search endpoint and is a 503
+            if (event.detail.pathInfo.requestPath === '/search/' && event.detail.xhr.status === 503) {
+                console.log('HTMX Response Error 503 detected for /search/. Handling manually.'); // Log 503 detection
+
+                const loadingIndicator = document.getElementById('loading-indicator');
+                const responseText = event.detail.xhr.responseText; // Contains the empty div with data attributes
+                console.log('Response text (for 503):', responseText);
+                console.log('Loading indicator element:', loadingIndicator);
+
+                // Prevent HTMX default error handling/swapping for 503
+                event.preventDefault();
+
+                // Check if a booting message already exists to prevent duplicates if errors fire rapidly
+                if (document.getElementById('booting-message')) {
+                    console.log('Booting message already exists. Skipping creation.');
+                    return; // Exit if message is already displayed
+                }
+
+                if (loadingIndicator && responseText && responseText.trim() !== '') { // Add explicit check for non-empty string
+                    // 1. Create and insert a *separate* booting message element
+                    const bootMessageText = 'Booting up search service. Your first query may take up to 30 seconds. Please wait...';
+                    const bootMessageDiv = document.createElement('div');
+                    bootMessageDiv.id = 'booting-message';
+                    bootMessageDiv.className = 'message message-warning'; // Use standard message styles
+                    bootMessageDiv.innerHTML = bootMessageText;
+                    // Insert the message *before* the standard loading indicator
+                    loadingIndicator.parentNode.insertBefore(bootMessageDiv, loadingIndicator);
+                    // Hide the standard indicator while the booting message is shown
+                    loadingIndicator.style.display = 'none';
+                    console.log('Inserted booting message element and hid standard indicator:', bootMessageDiv);
+
+                    // 2. Extract retry query from the response text (which is the empty div)
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = responseText;
+                    const resultsDiv = tempDiv.querySelector('#results[data-retry-trigger="true"]');
+                    console.log('Parsed resultsDiv from response:', resultsDiv); // Log parsed div
+                    const retryQuery = resultsDiv ? resultsDiv.getAttribute('data-retry-query') : null;
+                    console.log('Extracted retryQuery:', retryQuery); // Log extracted query
+
+                    // 3. Schedule the retry logic (targeting the original results area)
+                    const targetElement = document.getElementById('results-area'); // Still target results area for the *actual* results
+                    console.log('Target element for retry:', targetElement); // Log target element
+                    if (targetElement && retryQuery && !targetElement.dataset.retryScheduled) {
+                        console.log('Scheduling retry via responseError (indicator message). Waiting 30 seconds for query:', retryQuery);
+                        targetElement.dataset.retryScheduled = 'true'; // Mark as scheduled on the target element
+
+                        setTimeout(() => {
+                            console.log('Retrying search now (via responseError - indicator message) for query:', retryQuery);
+                            delete targetElement.dataset.retryScheduled; // Clean up marker
+
+                            // DO NOT remove the booting message here. It will be removed in afterSwap.
+                            // DO NOT make the standard indicator visible here. It stays hidden.
+
+                            // Trigger the actual search request WITHOUT the indicator option
+                            // The #booting-message will serve as the indicator during this request.
+                            htmx.ajax('POST', '/search/', {
+                                target: targetElement, // Target #results-area for the actual results
+                                swap: 'innerHTML swap:503', // Keep swap logic for retry success/failure
+                                values: { user_query: retryQuery }
+                                // NO indicator option here
+                            });
+                        }, 30000); // 30 seconds delay
+
+                    } else if (targetElement && targetElement.dataset.retryScheduled) {
+                        console.log('Retry already scheduled.');
+                        // Ensure indicator is visible if we bail out here (shouldn't happen often)
+                         if (loadingIndicator) loadingIndicator.style.display = '';
+                    } else if (!retryQuery) {
+                        console.error('Could not find retry query attribute in 503 response (via responseError).');
+                        // Display error in the boot message div
+                        bootMessageDiv.innerHTML = 'Error: Could not retrieve query for retry.';
+                        bootMessageDiv.className = 'message message-error'; // Change style to error
+                        if (loadingIndicator) loadingIndicator.style.display = 'none'; // Keep standard hidden
+                    } else {
+                         console.error('Could not find target element (#results-area) for retry.');
+                         bootMessageDiv.innerHTML = 'Error: Results area not found.';
+                         bootMessageDiv.className = 'message message-error';
+                         if (loadingIndicator) loadingIndicator.style.display = 'none'; // Keep standard hidden
+                    }
+
+                } else {
+                    console.error('Condition failed: loadingIndicator or responseText is missing/empty.', 'Indicator:', loadingIndicator, 'Response Text:', responseText);
+                    // Optionally display a generic error if the indicator itself is missing
+                    const resultsArea = document.getElementById('results-area');
+                    if(resultsArea) resultsArea.innerHTML = "<div class='message message-error'>An unexpected error occurred displaying the status.</div>";
+                     // Ensure indicator is visible if we bail out here
+                     if (loadingIndicator) loadingIndicator.style.display = '';
+                }
+            } else {
+                 console.log('htmx:responseError ignored (not /search/ or not 503). Status:', event.detail.xhr.status, 'Path:', event.detail.pathInfo.requestPath); // Log ignored errors
+                 // Ensure standard indicator is visible if an unrelated error occurs
+                 const loadingIndicator = document.getElementById('loading-indicator');
+                 if (loadingIndicator) loadingIndicator.style.display = '';
+                 // Also remove boot message if it somehow exists during other errors
+                 const bootMessageToRemove = document.getElementById('booting-message');
+                 if (bootMessageToRemove) bootMessageToRemove.remove();
+            }
+        });
+    </script>
+{% endblock %}

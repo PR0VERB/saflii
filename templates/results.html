@@ -1,0 +1,20 @@
+{# This template fragment is loaded into #results-area #}
+{% if results %}
+    {# Removed H2 title - context provided by main page #}
+    <div id="results-list"> {# Changed ID slightly for clarity, though not strictly necessary #}
+        {% for result in results %}
+            <div class="result-item" id="result-{{ result.id }}">
+                {# Use h5 to match CSS #}
+                <h5>{{ result.title }}</h5>
+
+                {# Display the actual paragraph content #}
+                <p>{{ result.html_content | safe }}</p>
+    </div>
+    {# Optional: Add pagination controls here if needed #}
+{% else %}
+    <p>No results found.</p>
+{% endif %}
+
+{# Keep the workspace button visible after search results load #}
+{# Note: The main workspace button is now permanently in index.html #}
+

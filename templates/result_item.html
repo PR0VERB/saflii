@@ -1,0 +1,77 @@
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- existing head content -->
+</head>
+
+<!-- {# This template renders a single result item #}
+{% if result %}
+<div class="result-item">
+    <p class="result-title"><a href="{{ result.link }}" target="_blank">{{ result.filename }}</a></p>
+    <p class="relevance">Relevance: {{ result.relevance_score_percent }}%</p>
+    <div class="paragraph">
+        {{ result.formatted_paragraph_parts | join('. ') | safe }}
+    </div>
+</div>
+{% endif %} -->
+
+<div class="result-item">
+    <h4><a href="{{ result.link }}" target="_blank">{{ result.filename }}</a> ({{ result.relevance_score_percent }}%)</h4>
+    <p>
+        {% for part in result.formatted_paragraph_parts %}
+            {{ part | safe }}
+        {% endfor %}
+    </p>
+    <!-- Add this button -->
+    {# Container for the 'Add' button and the subsequent project selection form #}
+    <div id="add-item-controls-{{ result.id }}" style="display: inline-block; min-width: 120px; text-align: right;">
+        {% if result.in_current_project %}
+            <span class="message message-info" style="font-size: 0.9em; padding: 2px 5px;">Already in project</span>
+        {% else %} {# Not in current project, show the button #}
+            <button
+                id="add-btn-{{ result.id }}" {# Add an ID to the button #}
+                hx-get="/workspace/get_add_to_project_form/{{ result.id }}?user_query={{ user_query }}" {# Pass query #}
+                hx-target="#add-item-controls-{{ result.id }}" {# Target the container div #}
+                hx-swap="innerHTML" {# Replace the container's content #}
+                class="button button-secondary" {# Removed button-small #}
+                {# Check if current_user exists (is not None) instead of checking is_authenticated attribute #}
+                {% if current_user %}
+                title="Add this paragraph to one of your projects"
+                > {# Add closing bracket for button tag here #}
+                    Add to Project... {# Add button text here #}
+                </button> {# Close the button tag #}
+                {% else %}
+                {# Logged out: Show a link to signup styled as a button #}
+                {# Removed the premature closing </a> tag #}
+                <a href="/signup" class="button button-secondary" title="Sign up to add to project" onclick="window.location.href='/signup'; return false;"> {# Use JS for direct navigation #}
+                    Add to Project...
+                </a>
+            {% endif %} {# End of current_user check #}
+        {% endif %} {# End of result.in_current_project check #}
+    </div>
+
+    <!-- New More Like This Button -->
+    <button
+        id="more-like-this-button-{{ result.id }}" {# Add ID for OOB swap #}
+        hx-get="/more_like_this/{{ result.id }}"
+        hx-target="#more-like-this-results-{{ result.id }}"
+        hx-swap="innerHTML"
+        hx-indicator="#more-like-this-spinner-{{ result.id }}" {# Optional spinner #}
+        class="button button-secondary"
+        style="margin-left: 10px;" {# Add some spacing #}
+        title="Find paragraphs similar to this one">
+        More Like This
+    </button>
+
+    <!-- Optional Spinner -->
+    <div id="more-like-this-spinner-{{ result.id }}" class="htmx-indicator" style="text-align: right; height: 20px; margin-top: 5px;">
+        Loading...
+    </div>
+
+    <!-- Target Div for More Like This Results -->
+    <div id="more-like-this-results-{{ result.id }}" style="margin-top: 15px; border-left: 3px solid #eee; padding-left: 15px; min-height: 20px;">
+        <!-- Similar results will be loaded here -->
+    </div>
+
+    <!-- Add a placeholder for status messages specific to this item -->
+    <div id="workspace-status-{{ result.id }}"></div>
+</div>

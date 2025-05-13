@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - SAFLII Discover</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    {# You might want to include your standard header here eventually #}
+    {# {% include 'partials/header.html' %} #}
+     <header class="minimal-header">
+        <div class="container header-container">
+            <div class="logo">
+                <a href="/">SAFLII Discover</a>
+            </div>
+            {# Basic nav, adjust as needed or include header partial #}
+             <nav class="header-nav">
+                 <a href="/" class="nav-link">Search</a>
+                 <a href="/workspace/" class="nav-link">Workspace</a>
+                 <a href="/login" class="nav-link">Login</a>
+             </nav>
+        </div>
+    </header>
+
+    <main class="main-content container" style="padding-top: 2rem; padding-bottom: 4rem;">
+        <h1 style="color: var(--error-text);">An Error Occurred</h1>
+        <div class="message message-error">
+            <p>Sorry, something went wrong.</p>
+            {% if detail %}
+                <p><strong>Details:</strong> {{ detail }}</p>
+            {% endif %}
+            <p style="margin-top: 1em;"><a href="/" class="button button-secondary">Go to Homepage</a></p>
+        </div>
+    </main>
+
+    {# You might want to include your standard footer here eventually #}
+    {# {% include 'partials/footer.html' %} #}
+     <footer class="minimal-footer">
+        <div class="container">
+            <p>&copy; 2025 LegalPro. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

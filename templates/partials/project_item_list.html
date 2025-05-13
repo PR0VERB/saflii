@@ -1,0 +1,119 @@
+{# Partial template for displaying items within a project #}
+{% if items_in_group %} {# Use variable from parent template's loop #}
+    <div class="project-item-list" style="margin-top: 1rem;">
+        {% for item_detail in items_in_group %} {# Use variable from parent template's loop #}
+            {# Each item_detail contains project_items fields and nested saflii_cases fields #}
+            {% set paragraph_data = item_detail.saflii_cases %}
+            <div class="workspace-item" id="project-item-{{ item_detail.id }}" style="margin-bottom: 1rem; padding: 1rem; background-color: #f8f9fa; border-radius: var(--border-radius);">
+                {% if paragraph_data %}
+                    <h6 style="font-size: 0.95rem; font-weight: 500; margin-bottom: 0.5rem;">
+                        From: <a href="{{ paragraph_data.htmlsaflii }}" target="_blank" rel="noopener noreferrer" title="View original document">{{ paragraph_data.filename | truncate(80) }}</a>
+                    </h6>
+                    {# Moved Date and Comment Here #}
+                    <div class="item-metadata-top" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.75rem;">
+                        <small>
+                            Added: {{ item_detail.added_at[:10] }}
+                            {% if item_detail.search_query %} | Query: <span title="{{ item_detail.search_query }}" style="font-style: italic;">"{{ item_detail.search_query | truncate(30) }}"</span>{% endif %}
+                        </small>
+                        </small>
+                    </div>
+                    {# Comment Section Wrapper #}
+                    <div id="comment-section-{{ item_detail.id }}" style="margin-top: 0.5rem; font-size: 0.85rem;">
+
+                        {# Comment Display View (Initially Visible) #}
+                        <div class="comment-display-view-{{ item_detail.id }}">
+                            {% if item_detail.comment %}
+                                <p style="margin-bottom: 0.25rem;">
+                                    <span class="comment-label" style="font-weight: bold; color: var(--text-secondary);">Comment:</span>
+                                    <span class="item-comment-text">{{ item_detail.comment }}</span>
+                                </p>
+                            {% else %}
+                                <p style="margin-bottom: 0.25rem; font-style: italic; color: var(--text-secondary);">
+                                    No comment added.
+                                </p>
+                            {% endif %}
+                            <button type="button" class="button button-secondary button-small" style="padding: 0.1rem 0.3rem; font-size: 0.75em;"
+                                    onclick="document.querySelector('.comment-display-view-{{ item_detail.id }}').style.display='none'; document.querySelector('.comment-edit-form-{{ item_detail.id }}').style.display='block';">
+                                {% if item_detail.comment %}Edit{% else %}Add{% endif %} Comment
+                            </button>
+                        </div>
+
+                        {# Comment Edit Form (Initially Hidden) #}
+                        <form class="comment-edit-form-{{ item_detail.id }}" style="display: none; margin-top: 0.5rem;"
+                              hx-post="/project_items/{{ item_detail.id }}/comment"
+                              hx-target="#comment-section-{{ item_detail.id }}"
+                              hx-swap="innerHTML">
+                            <textarea name="comment" rows="3" style="width: 100%; margin-bottom: 0.5rem; font-size: 0.9em; padding: 0.3rem;"
+                                      placeholder="Enter your comment...">{{ item_detail.comment or '' }}</textarea>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button type="submit" class="button button-primary button-small" style="padding: 0.2rem 0.4rem; font-size: 0.8em;">
+                                    Save Comment
+                                </button>
+                                <button type="button" class="button button-secondary button-small" style="padding: 0.2rem 0.4rem; font-size: 0.8em;"
+                                        onclick="document.querySelector('.comment-edit-form-{{ item_detail.id }}').style.display='none'; document.querySelector('.comment-display-view-{{ item_detail.id }}').style.display='block';">
+                                    Cancel
+                                </button>
+                            </div>
+                            {# Add a hidden input to potentially capture errors if needed, or rely on status codes #}
+                        </form>
+                    </div>
+                    {# End Comment Section Wrapper #}
+                    {# End Moved Date and Comment #}
+                    <div class="saved-content" style="font-size: 0.9rem; margin-bottom: 0.75rem;">
+                        {{ paragraph_data.paragraph | safe }}
+                    </div>
+                    {# Comment block removed from here #}
+                    {# Date block removed from here #}
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        {# Removed the <small> block containing date/query from here #}
+                        <div style="display: flex; gap: 0.5rem; margin-left: auto;"> {# Group buttons #}
+                             <!-- New More Like This Button -->
+                             <button
+                                 id="more-like-this-button-{{ item_detail.id }}" {# Added ID for OOB swap #}
+                                 hx-get="/more_like_this/{{ paragraph_data.id }}?project_item_id={{ item_detail.id }}" {# Use paragraph ID for API call, pass project_item_id for OOB #}
+                                 hx-target="#more-like-this-results-{{ item_detail.id }}" {# Use project item ID for unique target #}
+                                 hx-swap="innerHTML"
+                                 hx-indicator="#more-like-this-spinner-{{ item_detail.id }}" {# Use project item ID for unique spinner #}
+                                 class="button button-secondary button-small" {# Match style #}
+                                 style="padding: 0.2rem 0.4rem; font-size: 0.8em;"
+                                 title="Find paragraphs similar to this one">
+                                 More Like This
+                             </button>
+                             <!-- <a href="/export/html/{{ item_detail.paragraph_id }}"
+                                 target="_blank" {# Open in new tab or trigger download #}
+                                 class="button button-secondary button-small"
+                                style="padding: 0.2rem 0.4rem; font-size: 0.8em;"
+                                title="Export original HTML snippet"
+                             >
+                                Export HTML
+                             </a> -->
+                             <span class="drag-handle" title="Drag to reorder" style="cursor: grab; font-size: 1.2em; color: var(--text-secondary); margin-right: 0.5rem; user-select: none;">↕️</span>
+                             <button
+                                hx-delete="/project_items/{{ item_detail.id }}"
+                                hx-target="closest .workspace-item" {# Target the whole item div #}
+                                hx-swap="outerHTML" {# Remove the div on success #}
+                                hx-confirm="Are you sure you want to remove this item from the project?"
+                                class="button button-secondary button-small"
+                                style="padding: 0.2rem 0.4rem; font-size: 0.8em;"
+                             >
+                                Remove
+                             </button>
+                        </div>
+                   </div>
+                   <!-- Optional Spinner -->
+                   <div id="more-like-this-spinner-{{ item_detail.id }}" class="htmx-indicator" style="text-align: right; height: 20px; margin-top: 5px;">
+                       Loading...
+                   </div>
+                   <!-- Target Div for More Like This Results -->
+                   <div id="more-like-this-results-{{ item_detail.id }}" style="margin-top: 15px; border-left: 3px solid #eee; padding-left: 15px; min-height: 20px;">
+                       <!-- Similar results will be loaded here -->
+                   </div>
+               {% else %}
+                    <p class="message message-error">Error: Could not load details for paragraph ID {{ item_detail.paragraph_id }}.</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="placeholder-text" style="padding: 1rem 0; font-size: 0.9em;">This project doesn't have any items yet.</p>
+{% endif %}

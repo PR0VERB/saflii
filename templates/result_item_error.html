@@ -1,0 +1,8 @@
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- existing head content -->
+</head>
+<div style="color: orange; border: 1px solid orange; padding: 0.5em; margin-bottom: 1em;">
+    <p><strong>Error processing item:</strong> {{ item_title | default('N/A') }}</p>
+    <p>{{ error_details | default('Details unavailable.') }}</p>
+</div>

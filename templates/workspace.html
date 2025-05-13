@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}My Workspace - SAFLII Discover{% endblock %}
+
+{% block content %}
+{# Header is inherited from base.html #}
+
+{# The main content area is handled by the app-content block in base.html #}
+{# Remove main-content and container classes, rely on app-content padding #}
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5em;">
+            <h1 style="font-size: 1.8rem; font-weight: 700;">My Workspace</h1>
+            {# Removed Clear Workspace button for now - needs project-specific logic #}
+        </div>
+        <!-- <p style="margin-bottom: 1.5em; font-style: italic; color: var(--text-secondary);">Powered by LegalPro</p> -->
+
+        {# --- Create New Project Section --- #}
+        <section class="create-project-section" style="margin-bottom: 2.5rem; padding: 1.5rem; background-color: var(--bg-secondary); border-radius: var(--border-radius);">
+            <h2 style="font-size: 1.3rem; font-weight: 500; margin-bottom: 1rem;">Create New Project</h2>
+            <form
+                hx-post="/projects/create"
+                {# hx-target removed - list refresh handled by HX-Trigger header #}
+                {# hx-swap removed #}
+                hx-indicator="#create-project-indicator"
+                hx-target-error="#create-project-message" {# Display errors here #}
+            >
+                <div class="form-group">
+                    <label for="project_name">Project Name:</label>
+                    <input type="text" id="project_name" name="project_name" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="project_description">Description (Optional):</label>
+                    <textarea id="project_description" name="project_description" rows="2" class="input-field" style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid var(--border-color); border-radius: var(--border-radius); background-color: var(--bg-primary); color: var(--text-primary); font-size: 1rem; font-family: inherit;"></textarea>
+                </div>
+                 <div id="create-project-message" style="margin-top: 0.5rem; min-height: 1.5em;"></div> {# Placeholder for success/error messages #}
+                <button type="submit" class="button button-primary">Create Project</button>
+                <span id="create-project-indicator" class="htmx-indicator loading-text" style="margin-left: 10px;">Creating...</span>
+            </form>
+        </section>
+
+        {# --- Display User's Projects (Removed) --- #}
+        {# The project list is now displayed in the sidebar loaded via base.html #}
+        {# The main content area here just shows the 'Create New Project' form #}
+{# Footer is not typically part of the base app layout #}
+{% endblock %}

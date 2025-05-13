@@ -1,0 +1,6 @@
+{# Renders a single item for the "More Like This" results - only the filename link #}
+{% if result %}
+<div class="more-like-this-item" style="margin-bottom: 5px;">
+    <a href="{{ result.link }}" target="_blank">{{ result.filename }}</a> ({{ result.relevance_score_percent }}%)
+</div>
+{% endif %}

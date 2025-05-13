@@ -1,0 +1,1007 @@
+/* static/style.css - Light Theme Revision */
+
+/* CSS Variables for Light Theme */
+:root {
+    --bg-primary: #FFFFFF;         /* White background (Surface/Container) */
+    --bg-secondary: #F8F9FA;     /* Very light grey (Background) */
+    --bg-tertiary: #e9ecef;      /* Slightly darker grey for hover (Keep for now) */
+    --text-primary: #212529;     /* Almost black text */
+    --text-secondary: #6C757D;    /* Muted grey text */
+    --accent-primary: #1D3557;     /* Deep blue (Primary) */
+    --accent-secondary: #457B9D;    /* Softer blue (Accent) */
+    --border-color: #dee2e6;      /* Light grey border (Keep for now, might adjust later) */
+    --highlight-bg: #FFD166;      /* Soft gold for search highlights */
+    --error-bg: #fdecea;          /* Lighter red */
+    --error-text: #7f1d1d;        /* Darker red */
+    --error-border: #D62828;      /* Danger color */
+    --success-bg: #e8f5e9;        /* Lighter green */
+    --success-text: #14532d;      /* Darker green */
+    --success-border: #38B000;      /* Success color */
+    --info-bg: #fff3cd;           /* Light yellow for info/prompts */
+    --info-border: #ffeeba;       /* Slightly darker yellow border */
+    --info-text: #664d03;         /* Darker yellow/brown text for info */
+    /* Add Warning colors (using info colors as base) */
+    --warning-bg: var(--info-bg);       /* Light yellow */
+    --warning-border: var(--info-border); /* Slightly darker yellow border */
+    --warning-text: var(--info-text);     /* Darker yellow/brown text */
+    --font-main: 'Inter', sans-serif;
+    --container-max-width: 1140px;
+    --border-radius: 0.375rem; /* Bootstrap standard */
+}
+
+/* General Reset */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: var(--font-main);
+    line-height: 1.6;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+
+/* Container */
+.container {
+    max-width: var(--container-max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* --- Styles for New index.html Structure --- */
+
+/* Minimal Header - Sticky */
+.minimal-header {
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    position: sticky; /* Make header sticky */
+    top: 0;           /* Stick to the top */
+    z-index: 1000;    /* Ensure it's above other content */
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-size: 0.95rem;
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.user-greeting {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-right: 0.5rem;
+}
+
+/* Style for button used as link (e.g., Logout) */
+.button-link-style {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--accent-primary);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    text-decoration: none;
+}
+.button-link-style:hover {
+    color: var(--accent-secondary);
+    text-decoration: underline;
+}
+
+
+/* Main Content Area */
+.main-content {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+} 
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+.hero-section .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Main Search Form */
+.main-search-form {
+    display: flex;
+    max-width: 700px;
+    margin: 0 auto;
+    gap: 0.5rem;
+}
+
+.main-search-form input[type="text"] {
+    flex-grow: 1;
+    padding: 0.75rem 1rem; /* Slightly larger padding */
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem; /* Slightly more rounded corners */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.main-search-form input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Bootstrap focus glow */
+}
+
+/* Results Section */
+.results-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.placeholder-text {
+    text-align: center;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding: 2rem 0;
+}
+
+/* Features Section */
+.features-section {
+    margin-top: 4rem;
+    padding: 3rem 0;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+}
+
+.features-section h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.feature-item {
+    text-align: center;
+}
+
+.feature-item h3 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: var(--accent-primary);
+}
+
+.feature-item p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Minimal Footer */
+.minimal-footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+
+/* --- Updated Styles for Common Elements (Light Theme) --- */
+
+/* Forms (General - for login/signup if base.html is used) */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #fff; /* Default text color for primary button */
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--accent-primary);
+    border: 1px solid var(--accent-primary);
+    padding: 0.5rem 1rem; /* Adjusted padding */
+    font-size: 1rem;
+    border-radius: var(--border-radius);
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    white-space: nowrap;
+}
+
+.button:hover {
+    background-color: var(--accent-secondary);
+    border-color: var(--accent-secondary);
+    text-decoration: none;
+}
+
+.button:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.5);
+}
+
+.button:active {
+     background-color: var(--accent-secondary);
+    border-color: var(--accent-secondary);
+}
+
+.button-primary {
+    /* Uses default .button styles */
+}
+
+.button-secondary {
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+.button-secondary:hover {
+    background-color: #d3d9df; /* Darker tertiary */
+    border-color: #c7ced4;
+    color: var(--text-primary);
+}
+
+.button-small {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+}
+
+.button-large {
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: .75em;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--bg-primary); /* Text color */
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+    background-color: var(--accent-primary); /* Background color */
+    margin-left: 0.5em;
+}
+
+/* Loading Indicator */
+.loading-text {
+    display: block; /* Make it block for centering */
+    text-align: center;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    font-style: italic;
+    height: 1.6em; /* Reserve space */
+}
+.htmx-indicator { display: none; }
+.htmx-request .htmx-indicator { display: block; } /* Show during request */
+.htmx-request.htmx-indicator { display: block; }
+
+/* Explicitly show indicator when booting message is active */
+#loading-indicator.is-booting {
+    display: block !important; /* Use !important to override default htmx-indicator rule */
+}
+
+/* Result Item Styling */
+.result-item {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.result-item:hover {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Subtle shadow */
+}
+
+.result-item h5 { /* Case Name */
+    color: var(--accent-primary);
+    margin-bottom: 0.5rem;
+    font-size: 1.15rem;
+    font-weight: 500;
+}
+
+.result-item p { /* Paragraph Text */
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    line-height: 1.7;
+}
+
+.result-item small { /* Metadata */
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem; /* Space before button */
+}
+
+.result-item small strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.result-item small a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+.result-item small a:hover {
+    text-decoration: underline;
+    color: var(--accent-secondary);
+}
+
+.result-item .highlight { /* Highlighted sentence */
+    background-color: var(--highlight-bg); /* Soft gold highlight */
+    padding: 1px 3px;
+    border-radius: 3px;
+    margin: -1px -3px;
+}
+
+.result-item form { /* Add to workspace form */
+    margin-bottom: 0;
+    margin-top: 0; /* Reset margin */
+    text-align: right;
+}
+
+/* Pagination */
+.pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    list-style: none;
+}
+
+.pagination a, .pagination span {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: var(--accent-primary);
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+.pagination a:first-child { border-top-left-radius: var(--border-radius); border-bottom-left-radius: var(--border-radius); }
+.pagination span:last-child { border-top-right-radius: var(--border-radius); border-bottom-right-radius: var(--border-radius); }
+
+
+.pagination a:hover {
+    z-index: 2;
+    color: var(--accent-secondary);
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+.pagination .current-page {
+    z-index: 3;
+    color: #fff;
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+.pagination .disabled {
+    color: var(--text-secondary);
+    pointer-events: none;
+    background-color: var(--bg-primary);
+    border-color: var(--border-color);
+}
+
+/* Messages */
+.message {
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+}
+
+.message-success {
+    color: var(--success-text);
+    background-color: var(--success-bg);
+    border-color: var(--success-border);
+}
+
+.message-error {
+    color: var(--error-text);
+    background-color: var(--error-bg);
+    border-color: var(--error-border);
+}
+.message-info { /* Added for consistency */
+    color: #055160;
+    background-color: #cff4fc;
+    border-color: #b6effb;
+}
+
+.message-warning {
+    color: var(--warning-text);
+    background-color: var(--warning-bg);
+    border-color: var(--warning-border);
+}
+
+/* --- Styles for Base Template (If Used - Light Theme) --- */
+
+/* App Layout using CSS Grid */
+.app-wrapper {
+    display: grid;
+    grid-template-columns: 250px 1fr; /* Sidebar width and main content */
+    grid-template-rows: auto 1fr auto; /* Header, content, footer */
+    grid-template-areas:
+        "header header"
+        "sidebar main"
+        "footer footer";
+    min-height: 100vh;
+}
+
+.app-header {
+    grid-area: header;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1020; /* Ensure header is above sidebar */
+}
+
+.app-header .logo a {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.app-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.app-sidebar {
+    grid-area: sidebar;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    padding: 1.5rem 1rem;
+    overflow-y: auto; /* Allow scrolling if content exceeds height */
+    position: sticky; /* Make sidebar sticky */
+    top: 60px; /* Adjust based on header height */
+    height: calc(100vh - 60px); /* Adjust based on header height */
+}
+
+.app-sidebar h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.app-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.app-sidebar li a {
+    display: block;
+    padding: 0.6rem 0.75rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.app-sidebar li a:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.app-sidebar li a.active { /* Style for the active/current page link */
+    background-color: var(--accent-primary);
+    color: var(--bg-primary);
+    font-weight: 500;
+}
+
+.app-main {
+    grid-area: main;
+    padding: 2rem;
+    background-color: var(--bg-primary);
+    overflow-y: auto; /* Allow main content to scroll independently */
+}
+
+.app-footer {
+    grid-area: footer;
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* --- Styles for Workspace/Project Detail --- */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.page-header h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.project-actions form {
+    display: inline-block; /* Keep buttons side-by-side */
+    margin-left: 0.5rem;
+}
+
+.project-content {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column for now */
+    gap: 2rem;
+}
+
+.project-items-list {
+    /* Styles for the list container if needed */
+}
+
+.project-item {
+    background-color: var(--bg-secondary); /* Slightly different background */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    position: relative; /* For positioning the remove button */
+}
+
+.project-item h5 { /* Case Name */
+    color: var(--accent-primary);
+    margin-bottom: 0.3rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.project-item small { /* Metadata */
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 0.75rem;
+}
+.project-item small a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+.project-item small a:hover {
+    text-decoration: underline;
+    color: var(--accent-secondary);
+}
+
+.project-item p { /* Highlighted text */
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.project-item .highlight {
+    background-color: var(--highlight-bg);
+    padding: 1px 3px;
+    border-radius: 3px;
+    margin: -1px -3px;
+}
+
+.project-item-actions {
+    text-align: right;
+    margin-top: 0.5rem;
+}
+
+.project-item-actions form {
+    display: inline; /* Keep button inline */
+}
+
+.button-danger {
+    color: #fff;
+    background-color: var(--error-border);
+    border-color: var(--error-border);
+}
+
+.button-danger:hover {
+    background-color: #a31a1a; /* Darker red */
+    border-color: #901717;
+    color: #fff;
+}
+
+/* --- Styles for Login/Signup Pages --- */
+
+.auth-container {
+    max-width: 450px;
+    margin: 4rem auto; /* Center vertically and horizontally */
+    padding: 2rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+.auth-container h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+}
+
+.auth-container .form-group {
+    margin-bottom: 1.25rem;
+}
+
+.auth-container .button {
+    width: 100%; /* Make button full width */
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    margin-top: 0.5rem; /* Space above button */
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.auth-links a {
+    color: var(--accent-primary);
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+
+/* --- Utility Classes --- */
+.text-center { text-align: center; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+
+/* --- Added Styles for Auth Prompt --- */
+
+.auth-prompt {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    padding: 15px; /* Increased padding */
+    background-color: var(--info-bg); /* Light yellow background */
+    border: 1px solid var(--info-border); /* Matching border */
+    border-radius: var(--border-radius);
+    color: var(--info-text); /* Text color for better contrast on yellow */
+}
+
+.auth-prompt p {
+    margin-bottom: 8px;
+    color: inherit; /* Inherit color from parent */
+}
+
+.auth-prompt p:last-child {
+    margin-bottom: 0; /* Remove margin from last paragraph */
+}
+
+.auth-prompt a {
+    color: var(--accent-primary); /* Keep link color standard */
+    font-weight: 500; /* Make links slightly bolder */
+}
+.auth-prompt a:hover {
+    color: var(--accent-secondary);
+}
+
+.auth-prompt .subtle-text {
+    margin-top: 10px;
+    font-style: italic;
+    font-size: 0.9em;
+    color: var(--text-secondary); /* Use standard secondary text color */
+}
+
+/* --- Responsive Design --- */
+/* Added comments to explain responsive adjustments */
+
+/* == Mobile First Adjustments (Apply to all sizes unless overridden) == */
+/* Base styles are generally mobile-friendly, but specific adjustments are below */
+
+
+/* == Tablet and Larger (e.g., >= 768px) == */
+/* Styles for screens 768px and wider */
+@media (min-width: 768px) {
+    /* Restore grid layout for larger screens */
+    /* Ensures sidebar and main content are side-by-side */
+    .app-wrapper {
+        grid-template-columns: 250px 1fr; /* Fixed sidebar width, flexible main content */
+        grid-template-areas:
+            "header header"
+            "sidebar main"
+            "footer footer";
+    }
+
+    /* Ensure sidebar is visible and sticky on larger screens */
+    .app-sidebar {
+        display: block; /* Explicitly show sidebar */
+        position: sticky; /* Keep sidebar visible when scrolling main content */
+        top: 60px; /* Position below the sticky header (adjust if header height changes) */
+        height: calc(100vh - 60px); /* Full height minus header */
+    }
+
+    /* Add any tablet-specific overrides here if needed */
+    /* Example: Increase base font size slightly */
+    /* body { font-size: 17px; } */
+    /* Adjust project content grid for tablets if needed */
+    /* .project-content { grid-template-columns: repeat(2, 1fr); } */
+}
+
+
+/* == Smaller Screens / Mobile (e.g., < 768px) == */
+/* Styles for screens narrower than 768px */
+@media (max-width: 767.98px) {
+    /* --- General Adjustments --- */
+    /* Slightly smaller base font for better fit on mobile */
+    body {
+        font-size: 15px;
+    }
+
+    /* Allow container to use full width on small screens */
+    .container {
+        max-width: 100%;
+        padding-left: 10px; /* Reduce side padding */
+        padding-right: 10px;
+    }
+
+    /* --- Header Adjustments --- */
+    /* Reduce padding within header elements */
+    .header-container, .app-header {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    /* Allow header navigation links to wrap */
+    .header-nav {
+        flex-wrap: wrap;
+        gap: 0.5rem; /* Reduce gap between nav items */
+        justify-content: flex-end; /* Align items to the right */
+    }
+    /* Slightly smaller logo text */
+    .logo a { font-size: 1.3rem; }
+    .app-header .logo a { font-size: 1.2rem; }
+
+
+    /* --- App Layout Stack --- */
+    /* Change grid to single column for stacking */
+    .app-wrapper {
+        grid-template-columns: 1fr; /* Full width */
+        grid-template-areas:
+            "header"
+            "sidebar" /* Sidebar stacks below header */
+            "main"
+            "footer";
+        /* Consider hiding sidebar by default and adding a toggle button */
+    }
+
+    /* Adjust sidebar for stacked layout */
+    .app-sidebar {
+        position: static; /* Remove stickiness */
+        height: auto;     /* Natural height */
+        border-right: none; /* Remove side border */
+        border-bottom: 1px solid var(--border-color); /* Add border below */
+        padding: 1rem; /* Adjust padding */
+        /* display: none; */ /* Uncomment this line to hide sidebar by default, requiring a toggle button */
+    }
+    .app-sidebar h3 { margin-bottom: 0.5rem; }
+    .app-sidebar li a { padding: 0.5rem 0.5rem; } /* Adjust link padding */
+
+
+    /* Reduce padding in main content area */
+    .app-main {
+        padding: 1rem;
+    }
+
+    /* --- Hero Section --- */
+    /* Adjust hero text sizes */
+    .hero-section h1 { font-size: 2rem; }
+    .hero-section .subtitle { font-size: 1rem; max-width: 95%; }
+
+    /* --- Search Form --- */
+    /* Stack search input and button vertically */
+    .main-search-form {
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 95%;
+    }
+    /* Make search button full width */
+    .main-search-form .button {
+        width: 100%;
+    }
+
+    /* --- Features Section --- */
+    /* Stack feature items vertically */
+    .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 95%;
+    }
+    /* Adjust section padding and heading size */
+    .features-section { padding: 2rem 0; }
+    .features-section h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+
+    /* --- Results & Project Items --- */
+    /* Reduce padding on result/project items */
+    .result-item, .project-item {
+        padding: 1rem;
+    }
+    /* Adjust heading size */
+    .result-item h5, .project-item h5 { font-size: 1.05rem; }
+    /* Align action forms/buttons to the left */
+    .result-item form, .project-item-actions { text-align: left; margin-top: 0.75rem; }
+
+    /* --- Pagination --- */
+    /* Allow pagination links to wrap */
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    /* Add space below wrapped pagination items */
+    .pagination a, .pagination span {
+        margin-bottom: 5px;
+    }
+
+    /* --- Auth Forms --- */
+    /* Adjust auth container for smaller screens */
+    .auth-container {
+        margin: 2rem auto; /* Reduce top/bottom margin */
+        padding: 1.5rem; /* Reduce padding */
+        max-width: 90%; /* Allow slightly wider */
+        box-shadow: none; /* Optional: remove shadow */
+    }
+    .auth-container h1 { font-size: 1.5rem; } /* Reduce heading size */
+
+    /* --- Project Detail --- */
+    /* Stack page header elements */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start; /* Align to left */
+        gap: 0.5rem;
+    }
+    .page-header h1 { font-size: 1.5rem; } /* Reduce heading size */
+    /* Adjust action button margins */
+    .project-actions { margin-left: 0; margin-top: 0.5rem; }
+
+}
+
+/* == Optional: Larger Desktop Screens (e.g., >= 1200px) == */
+/* Styles for screens 1200px and wider */
+@media (min-width: 1200px) {
+    /* Add styles for very large screens if needed */
+    /* Example: Increase container width for more content space */
+    /* .container { max-width: 1320px; } */
+}
+/* Style for the unique filter button */
+.button.button-filter-unique {
+    background-color: #6a0dad; /* Purple */
+    color: white;
+    border-color: #5a0bad;
+}
+
+.button.button-filter-unique:hover {
+    background-color: #5a0bad; /* Darker purple on hover */
+    border-color: #4a099d;
+}
+
+/* Optional: Adjust container margin if needed */
+.filter-button-container {
+    margin-bottom: 1rem;
+    text-align: center;
+}

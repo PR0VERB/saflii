@@ -1,0 +1,21 @@
+{# Renders projects as a simple list for the sidebar #}
+<h4 style="padding: 0 12px; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">Projects</h4>
+<nav>
+    <ul style="list-style: none; padding-left: 0;">
+        {% if projects %}
+            {% for project in projects %}
+                <li>
+                    {# Check if current_project_id is passed and matches #}
+                    {% set is_active = current_project_id and current_project_id == project.id %}
+                    <a href="/projects/{{ project.id }}"
+                       class="sidebar-link {% if is_active %}active{% endif %}"
+                       title="{{ project.description or project.name }}">
+                        {{ project.name | truncate(25, True) }} {# Truncate long names #}
+                    </a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li style="padding: 8px 12px; color: var(--text-secondary); font-style: italic; font-size: 0.9em;">Create an account or log in to create or view your projects.</li>
+        {% endif %}
+    </ul>
+</nav>

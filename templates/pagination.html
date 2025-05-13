@@ -1,0 +1,68 @@
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- existing head content -->
+</head>
+
+{% if total_pages > 1 %}
+<nav aria-label="Page navigation" class="pagination-nav">
+    <ul class="pagination">
+        {# Previous Button #}
+        <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+            {# Manually construct URL with query parameters #}
+            {% set prev_page = current_page - 1 %}
+            {% set prev_params = {'user_query': user_query, 'page': prev_page} %}
+            {% if unique_filter_active %}{% set _ = prev_params.update({'unique': 'true'}) %}{% endif %}
+            {% if project_id %}{% set _ = prev_params.update({'project_id': project_id}) %}{% endif %}
+            {% set prev_page_url = '/search/?' + prev_params|urlencode %}
+            <button class="page-link"
+                    hx-get="{{ prev_page_url }}"
+                    hx-target="#results-area"
+                    hx-swap="innerHTML swap:503" {# Keep 503 swap for consistency #}
+                    hx-indicator="#loading-indicator"
+                    hx-push-url="true" {# Update URL on pagination #}
+                    {% if current_page == 1 %}disabled{% endif %}>
+                &laquo; Previous
+            </button>
+        </li>
+
+        {# Page Number Buttons #}
+        {% for page_num in range(1, total_pages + 1) %}
+        <li class="page-item {% if page_num == current_page %}active{% endif %}">
+            {# Manually construct URL with query parameters #}
+            {% set page_params = {'user_query': user_query, 'page': page_num} %}
+            {% if unique_filter_active %}{% set _ = page_params.update({'unique': 'true'}) %}{% endif %}
+            {% if project_id %}{% set _ = page_params.update({'project_id': project_id}) %}{% endif %}
+            {% set page_num_url = '/search/?' + page_params|urlencode %}
+            <button class="page-link"
+                    hx-get="{{ page_num_url }}"
+                    hx-target="#results-area"
+                    hx-swap="innerHTML swap:503" {# Keep 503 swap #}
+                    hx-indicator="#loading-indicator"
+                    hx-push-url="true" {# Update URL on pagination #}
+                    {% if page_num == current_page %}disabled aria-current="page"{% endif %}>
+                {{ page_num }}
+            </button>
+        </li>
+        {% endfor %}
+
+        {# Next Button #}
+        <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+            {# Manually construct URL with query parameters #}
+            {% set next_page = current_page + 1 %}
+            {% set next_params = {'user_query': user_query, 'page': next_page} %}
+            {% if unique_filter_active %}{% set _ = next_params.update({'unique': 'true'}) %}{% endif %}
+            {% if project_id %}{% set _ = next_params.update({'project_id': project_id}) %}{% endif %}
+            {% set next_page_url = '/search/?' + next_params|urlencode %}
+            <button class="page-link"
+                    hx-get="{{ next_page_url }}"
+                    hx-target="#results-area"
+                    hx-swap="innerHTML swap:503" {# Keep 503 swap #}
+                    hx-indicator="#loading-indicator"
+                    hx-push-url="true" {# Update URL on pagination #}
+                    {% if current_page == total_pages %}disabled{% endif %}>
+                Next &raquo;
+            </button>
+        </li>
+    </ul>
+</nav>
+{% endif %}
