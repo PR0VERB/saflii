@@ -7,7 +7,7 @@
     --bg-tertiary: #e9ecef;      /* Slightly darker grey for hover (Keep for now) */
     --text-primary: #212529;     /* Almost black text */
     --text-secondary: #6C757D;    /* Muted grey text */
-    --accent-primary: #1D3557;     /* Deep blue (Primary) */
+    --accent-primary: #017A4C;     /* Deep blue (Primary) */
     --accent-secondary: #457B9D;    /* Softer blue (Accent) */
     --border-color: #dee2e6;      /* Light grey border (Keep for now, might adjust later) */
     --highlight-bg: #FFD166;      /* Soft gold for search highlights */
@@ -501,7 +501,7 @@ input::placeholder {
     border-color: var(--error-border);
 }
 .message-info { /* Added for consistency */
-    color: #055160;
+    color: #017A4C;
     background-color: #cff4fc;
     border-color: #b6effb;
 }

@@ -45,6 +45,11 @@
             <nav>
                 <ul>
                     <li>
+                        <a href="https://www.saflii.org/" class="sidebar-link" id="saflii-home-button">
+                            SAFLII Home
+                        </a>
+                    </li>
+                    <li>
                         {# Add 'active' class if the current endpoint is 'search.index' #}
                         <a href="/" class="sidebar-link {% if request.url.path == '/' %}active{% endif %}" id="search-button"> {# Check path instead of endpoint #}
                             Search
