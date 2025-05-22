@@ -90,11 +90,18 @@
         <input type="email" id="email" value="{{ user.email }}" disabled>
     </div>
 
-    {# Name (read-only) #}
+    {# First Name (read-only) #}
     <div class="form-group">
-        <label for="name">Name</label>
-        {# Display existing name from user_metadata #}
-        <input type="text" id="name" value="{{ user_name }}" disabled>
+        <label for="first_name">First Name</label>
+        {# Display existing first name from user_metadata #}
+        <input type="text" id="first_name" value="{{ user.user_metadata.first_name|default('') }}" disabled>
+    </div>
+
+    {# Surname (read-only) #}
+    <div class="form-group">
+        <label for="surname">Surname</label>
+        {# Display existing surname from user_metadata #}
+        <input type="text" id="surname" value="{{ user.user_metadata.surname|default('') }}" disabled>
     </div>
     {# Removed the form and update button #}
 </div>

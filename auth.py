@@ -148,14 +148,14 @@ async def handle_login(
 @router.post("/signup", response_class=HTMLResponse)
 async def handle_signup(
     request: Request,
-    name: str = Form(...),      # Added name
+    first_name: str = Form(...), # Added first_name
     surname: str = Form(...),   # Added surname
     email: str = Form(...),
     password: str = Form(...),
     db: Client = Depends(get_supabase_client)
 ):
     """Handles user signup attempts."""
-    logger.info(f"Signup attempt for email: {email}, Name: {name}, Surname: {surname}") # Log new fields
+    logger.info(f"Signup attempt for email: {email}, First Name: {first_name}, Surname: {surname}") # Log new fields
     try:
         # Pass name and surname in the 'data' field within the main credentials dict
         # This data will be stored in user_metadata
@@ -164,7 +164,7 @@ async def handle_signup(
             "password": password,
             "options": { # Supabase expects metadata under 'options' -> 'data' here
                 "data": {
-                    "name": name,
+                    "first_name": first_name,
                     "surname": surname
                 }
             }
@@ -334,16 +334,17 @@ async def get_profile_page(request: Request, current_user: dict = Depends(get_cu
 @router.post("/profile", response_class=HTMLResponse)
 async def handle_profile_update(
     request: Request,
-    name: str = Form(...),
+    first_name: str = Form(...),
+    surname: str = Form(...),
     db: Client = Depends(get_supabase_client),
     current_user: dict = Depends(get_current_user) # Get current user data
 ):
-    """Handles updates to the user's profile (e.g., name)."""
+    """Handles updates to the user's profile (e.g., first name, surname)."""
     user_id = current_user.get('id')
     user_email = current_user.get('email')
     access_token = request.session.get('access_token')
 
-    logger.info(f"Profile update attempt for user: {user_email} (ID: {user_id}) with new name: {name}")
+    logger.info(f"Profile update attempt for user: {user_email} (ID: {user_id}) with new first name: {first_name}, surname: {surname}")
 
     if not access_token:
          logger.error(f"Access token not found in session for user {user_email}. Cannot update profile.")
@@ -360,7 +361,7 @@ async def handle_profile_update(
 
     try:
         # Prepare the update data for Supabase
-        attributes = UserAttributes(data={'name': name})
+        attributes = UserAttributes(data={'first_name': first_name, 'surname': surname})
 
         # Update the user's metadata in Supabase
         response = db.auth.update_user(attributes=attributes, jwt=access_token) # Removed await
